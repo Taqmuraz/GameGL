@@ -2,9 +2,12 @@ package entities;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import models.ModelContainer;
+import models.RawModel;
 import models.TexturedModel;
+import textures.ModelTexture;
 
-public class Entity extends Transformable {
+public class Entity extends Transformable implements ModelContainer {
 
 	private TexturedModel model;
 	
@@ -13,11 +16,20 @@ public class Entity extends Transformable {
 		this.model = model;
 	}
 
-	public TexturedModel getModel() {
+	public TexturedModel getTexturedModel() {
 		return model;
 	}
 
 	public void setModel(TexturedModel model) {
 		this.model = model;
+	}
+	
+	public RawModel getRawModel ()
+	{
+		return model.getRawModel();
+	}
+	public ModelTexture getTexture ()
+	{
+		return model.getTexture();
 	}
 }

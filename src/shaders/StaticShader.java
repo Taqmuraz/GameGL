@@ -1,6 +1,7 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 
 import entities.Camera;
 import entities.Light;
@@ -8,8 +9,8 @@ import toolbox.Maths;
 
 public class StaticShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/shaders/vertexShader.txt";
-	private static final String FRAGMENT_FILE = "src/shaders/fragmentShader.txt";
+	protected static String VERTEX_FILE;
+	protected static String FRAGMENT_FILE;
 	
 	private static float AMBIENCE_INTENCIVITY = 0.4f;
 	
@@ -21,6 +22,13 @@ public class StaticShader extends ShaderProgram {
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_ambienceIntencivity;
+	private int location_tiling;
+	
+	static
+	{
+		VERTEX_FILE = "src/shaders/vertexShader.txt";
+		FRAGMENT_FILE = "src/shaders/fragmentShader.txt";
+	}
 
 	
 	public StaticShader() {
@@ -51,6 +59,8 @@ public class StaticShader extends ShaderProgram {
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		
 		location_ambienceIntencivity = super.getUniformLocation("ambienceIntencivity");
+		
+		location_tiling = super.getUniformLocation("tiling");
 	}
 	
 	public void loadShineVariables (float damper, float reflectivity)
@@ -71,6 +81,10 @@ public class StaticShader extends ShaderProgram {
 	{
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, viewMatrix);
+	}
+	public void loadTiling (Vector2f tiling)
+	{
+		super.loadVector2(location_tiling, tiling);
 	}
 	public void loadLight (Light light)
 	{

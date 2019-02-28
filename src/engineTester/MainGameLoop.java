@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import models.ModelContainer;
 import models.RawModel;
 import models.TexturedModel;
 import objConverter.ModelData;
@@ -17,6 +19,7 @@ import objConverter.OBJFileLoader;
 import rendererEngine.DisplayManager;
 import rendererEngine.Loader;
 import rendererEngine.MasterRenderer;
+import terrains.Terrain;
 import textures.ModelTexture;
 
 public class MainGameLoop {
@@ -35,10 +38,12 @@ public class MainGameLoop {
 		texture.setShineDampen(10f);
 		texture.setReflectivity(1f);
 		
+		List<ModelContainer> modelContainers = new ArrayList<ModelContainer>();
 		
+		Terrain terrain = new Terrain (0,0, loader, new ModelTexture (loader.loadTexture("GRASS"), new Vector2f(50f, 50f)));
 		
-		List<Entity> entities = new ArrayList<Entity>();
-		
+		modelContainers.add(terrain);
+				
 		Random random = new Random();
 		
 		for (int i = 0; i < 100; i++)
@@ -56,7 +61,7 @@ public class MainGameLoop {
 			
 			Entity entity = new Entity(staticModel, new Vector3f(x, y, z), new Vector3f (rx, ry, rz), s);
 			
-			entities.add(entity);
+			modelContainers.add(entity);
 		}
 		
 		
@@ -74,9 +79,9 @@ public class MainGameLoop {
 			
 			camera.move();
 			
-			for (Entity entity : entities)
+			for (ModelContainer mc : modelContainers)
 			{
-				masterRenderer.processEntity(entity);
+				masterRenderer.processModelContainer(mc);
 			}
 			
 			masterRenderer.render(light, camera);

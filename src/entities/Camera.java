@@ -19,6 +19,11 @@ public class Camera extends Transformable {
 		Vector3f deltaRot = new Vector3f();
 		float rotate_speed = 0.1f;
 		
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+		{
+			move_Speed *= 20f;
+		}
+		
 		if (Keyboard.isKeyDown(Keyboard.KEY_W))
 		{
 			delta.z += move_Speed;

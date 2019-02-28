@@ -2,7 +2,7 @@ package models;
 
 import textures.ModelTexture;
 
-public class TexturedModel {
+public class TexturedModel implements ModelContainer {
 	
 	private RawModel rawModel;
 	private ModelTexture texture;
@@ -19,5 +19,9 @@ public class TexturedModel {
 
 	public ModelTexture getTexture() {
 		return texture;
+	}
+	
+	public TexturedModel getTexturedModel() {
+		return this;
 	}
 }
