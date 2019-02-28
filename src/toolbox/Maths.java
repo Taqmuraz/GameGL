@@ -1,11 +1,15 @@
 package toolbox;
 
+import java.util.Random;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 
 public class Maths {
+	
+	private static final Random random = new Random();
 	
 	public static Matrix4f createTransformationMatrix (Vector3f translation, Vector3f rotation, float scale)
 	{
@@ -29,4 +33,11 @@ public class Maths {
         Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
         return viewMatrix;
     }
+	
+	public static float randomFloat (float min, float max)
+	{
+		float d = max - min;
+		float resoult = min + d * random.nextFloat();
+		return resoult;
+	}
 }

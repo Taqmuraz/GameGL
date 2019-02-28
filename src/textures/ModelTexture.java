@@ -9,6 +9,12 @@ public class ModelTexture {
 	private float shineDamper = 1f;
 	private float reflectivity = 0f;
 	
+	private boolean enableCulling = true;
+	private boolean enableGlobalNormal = false;
+	private float alphaCutOff = 0.5f;
+	private float windEffect = 0f;
+	
+
 	private Vector2f tiling;
 	
 	public ModelTexture (int id)
@@ -40,5 +46,36 @@ public class ModelTexture {
 	}
 	public void setReflectivity(float reflectivity) {
 		this.reflectivity = reflectivity;
+	}
+	public boolean isEnableCulling() {
+		return enableCulling;
+	}
+
+	public void setEnableCulling(boolean enableCulling) {
+		this.enableCulling = enableCulling;
+	}
+	
+	public float getAlphaCutOff() {
+		return alphaCutOff;
+	}
+
+	public void setAlphaCutOff(float alphaCutOff) {
+		this.alphaCutOff = alphaCutOff;
+	}
+
+	public boolean isEnableGlobalNormal() {
+		return enableGlobalNormal;
+	}
+
+	public void setEnableGlobalNormal(boolean enableGlobalNormal) {
+		this.enableGlobalNormal = enableGlobalNormal;
+	}
+
+	public float getWindEffect() {
+		return windEffect;
+	}
+
+	public void setWindEffect(float windEffect) {
+		this.windEffect = windEffect;
 	}
 }

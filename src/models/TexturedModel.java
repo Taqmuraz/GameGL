@@ -1,5 +1,7 @@
 package models;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import textures.ModelTexture;
 
 public class TexturedModel implements ModelContainer {
@@ -23,5 +25,14 @@ public class TexturedModel implements ModelContainer {
 	
 	public TexturedModel getTexturedModel() {
 		return this;
+	}
+	
+	public void processWind ()
+	{
+		
+	}
+	public Vector3f getWIND_DIRECTION(float windForce)
+	{
+		return new Vector3f();
 	}
 }

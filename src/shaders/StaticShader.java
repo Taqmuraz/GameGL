@@ -1,10 +1,13 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
+import entities.Entity;
 import entities.Light;
+import models.ModelContainer;
+import textures.ModelTexture;
 import toolbox.Maths;
 
 public class StaticShader extends ShaderProgram {
@@ -23,6 +26,9 @@ public class StaticShader extends ShaderProgram {
 	private int location_reflectivity;
 	private int location_ambienceIntencivity;
 	private int location_tiling;
+	private int location_alphaCutOff;
+	private int location_globalNormal;
+	private int location_windEffect;
 	
 	static
 	{
@@ -61,12 +67,10 @@ public class StaticShader extends ShaderProgram {
 		location_ambienceIntencivity = super.getUniformLocation("ambienceIntencivity");
 		
 		location_tiling = super.getUniformLocation("tiling");
-	}
-	
-	public void loadShineVariables (float damper, float reflectivity)
-	{
-		super.loadFloat(location_shineDamper, damper);
-		super.loadFloat(location_reflectivity, reflectivity);
+		
+		location_alphaCutOff = super.getUniformLocation("alphaCutOff");
+		
+		location_windEffect = super.getUniformLocation("windEffect");
 	}
 	
 	public void loadTransformationMatrix (Matrix4f matrix)
@@ -82,20 +86,28 @@ public class StaticShader extends ShaderProgram {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
-	public void loadTiling (Vector2f tiling)
-	{
-		super.loadVector2(location_tiling, tiling);
-	}
 	public void loadLight (Light light)
 	{
 		super.loadFloat(location_ambienceIntencivity, AMBIENCE_INTENCIVITY);
 		super.loadVector(location_lightPosition, light.getPosition());
 		super.loadVector(location_lightColor, light.getColor());
 	}
+	public void loadTextureParams (ModelTexture texture)
+	{
+		super.loadBoolean(location_globalNormal, texture.isEnableGlobalNormal());
+		super.loadFloat(location_alphaCutOff, texture.getAlphaCutOff());
+		super.loadVector2(location_tiling, texture.getTiling());
+		super.loadFloat(location_shineDamper, texture.getShineDampen());
+		super.loadFloat(location_reflectivity, texture.getReflectivity());
+	}
+	public void loadWind (ModelContainer modelContainer) 
+	{
+		super.loadVector(location_windEffect, modelContainer.getWIND_DIRECTION(modelContainer.getTexture().getWindEffect()));
+	}
 }
 
 
-
+ 
 
 
 

@@ -32,9 +32,7 @@ public class MasterRenderer {
 	
 	public MasterRenderer ()
 	{
-		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glCullFace(GL11.GL_BACK);
 		createProjectionMatrix ();
 		
 		StaticShader entitiesShader = new StaticShader();
@@ -49,6 +47,7 @@ public class MasterRenderer {
 		prepare();
 		for (RendererContainer renderer : renderers)
 		{
+			
 			renderer.getShader().start();
 			renderer.getShader().loadLight(sun);
 			renderer.getShader().loadViewMatrix(camera);
@@ -73,6 +72,17 @@ public class MasterRenderer {
 		batch.add(entity);
 	}
 	
+	public static void setCulling (boolean enable)
+	{
+		if (enable)
+		{
+			GL11.glEnable(GL11.GL_CULL_FACE);
+			GL11.glCullFace(GL11.GL_BACK);
+		} else {
+			GL11.glDisable(GL11.GL_CULL_FACE);
+		}
+	}
+	
 	public void cleanUp ()
 	{
 		for (RendererContainer renderer : renderers)
@@ -84,7 +94,7 @@ public class MasterRenderer {
 	public void prepare ()
 	{
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
+		GL11.glClearColor(0.7f, 0.7f, 1.0f, 1);
 	}
 	
 	private void createProjectionMatrix ()

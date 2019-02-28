@@ -37,11 +37,12 @@ public class EntityRenderer {
 		{
 			prepareTexturedModel (model);
 			List<ModelContainer> batch = entities.get(model);
-			for (ModelContainer entity : batch)
+			for (ModelContainer modelContainer : batch)
 			{
-				if (entity instanceof Transformable)
+				if (modelContainer instanceof Transformable)
 				{
-					prepareInstance ((Transformable)entity);
+					processWind(modelContainer);
+					prepareInstance ((Transformable)modelContainer);
 					GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 				}
 			}
@@ -49,8 +50,14 @@ public class EntityRenderer {
 		}
 	}
 	
-	private void prepareTexturedModel (ModelContainer modelContainer)
+	private void processWind (ModelContainer modelContainer)
 	{
+		modelContainer.processWind();
+		shader.loadWind(modelContainer);
+	}
+	
+	private void prepareTexturedModel (ModelContainer modelContainer)
+	{	
 		RawModel model = modelContainer.getRawModel();
 		GL30.glBindVertexArray(model.getVaoID());
 		
@@ -63,8 +70,9 @@ public class EntityRenderer {
 		
 		ModelTexture texture = modelContainer.getTexture();
 		
-		shader.loadShineVariables(texture.getShineDampen(), texture.getReflectivity());
-		shader.loadTiling(texture.getTiling());
+		MasterRenderer.setCulling(texture.isEnableCulling());
+		
+		shader.loadTextureParams(texture);
 		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, modelContainer.getTexture().getTextureID());
@@ -83,6 +91,10 @@ public class EntityRenderer {
 	{
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(transformable.getPosition(), transformable.getRotation(), transformable.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
+	}
+
+	public StaticShader getShader() {
+		return shader;
 	}
 }
 

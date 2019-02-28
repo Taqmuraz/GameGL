@@ -92,4 +92,12 @@ public class Terrain extends Transformable implements ModelContainer {
 		}
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
+	public void processWind ()
+	{
+		
+	}
+	public Vector3f getWIND_DIRECTION(float windForce)
+	{
+		return new Vector3f();
+	}
 }
