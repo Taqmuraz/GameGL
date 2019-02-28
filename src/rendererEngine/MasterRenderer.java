@@ -11,6 +11,7 @@ import java.util.Map;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
@@ -32,6 +33,7 @@ public class MasterRenderer {
 	
 	public MasterRenderer ()
 	{
+		
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		createProjectionMatrix ();
 		
@@ -99,8 +101,8 @@ public class MasterRenderer {
 	
 	private void createProjectionMatrix ()
 	{
-		float aspectRatio = ((float)Display.getWidth() / (float)Display.getHeight());
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV * 0.5f))) * aspectRatio);
+		float aspectRatio = ((float)Display.getDisplayMode().getWidth() / (float)Display.getDisplayMode().getHeight());
+		float y_scale = 1f / (float) Math.tan(Math.toRadians(FOV / 2f));
 		float x_scale = y_scale / aspectRatio;
 		float frustum_length = FAR_PLANE - NEAR_PLANE;
 		

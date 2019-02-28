@@ -74,7 +74,7 @@ public class MainGameLoop {
 		
 		modelContainers.add(terrain);
 		
-		Entity entity = new Entity(staticModel, new Vector3f(200f, 0f, 200f), new Vector3f (), 1.0f);
+		Entity entity = new Entity(staticModel, new Vector3f(400f, 0f, 400f), new Vector3f (), 1.0f);
 		
 		modelContainers.add(entity);
 		
@@ -82,7 +82,7 @@ public class MainGameLoop {
 		Light light = new Light (new Vector3f(Terrain.getSIZE() / 2,1000f, Terrain.getSIZE() / 2), new Vector3f(1f, 1f, 1f));
 		
 		Camera camera = new Camera ();
-		camera.setPosition(new Vector3f(200f, 3f, -200f));
+		camera.setPosition(new Vector3f(400f, 1f, 400f));
 		
 		MasterRenderer masterRenderer = new MasterRenderer ();
 		
