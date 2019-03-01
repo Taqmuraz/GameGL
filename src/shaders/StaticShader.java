@@ -7,6 +7,7 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import models.ModelContainer;
+import rendererEngine.MasterRenderer;
 import textures.ModelTexture;
 import toolbox.Maths;
 
@@ -17,18 +18,23 @@ public class StaticShader extends ShaderProgram {
 	
 	private static float AMBIENCE_INTENCIVITY = 0.4f;
 	
-	private int location_transformationMatrix;
-	private int location_projectionMatrix;
-	private int location_viewMatrix;
-	private int location_lightPosition;
-	private int location_lightColor;
-	private int location_shineDamper;
-	private int location_reflectivity;
-	private int location_ambienceIntencivity;
-	private int location_tiling;
-	private int location_alphaCutOff;
-	private int location_globalNormal;
-	private int location_windEffect;
+	private UniformContainer location_transformationMatrix;
+	private UniformContainer location_projectionMatrix;
+	private UniformContainer location_viewMatrix;
+	private UniformContainer location_lightPosition;
+	private UniformContainer location_lightColor;
+	private UniformContainer location_shineDamper;
+	private UniformContainer location_reflectivity;
+	private UniformContainer location_ambienceIntencivity;
+	private UniformContainer location_tiling;
+	private UniformContainer location_alphaCutOff;
+	private UniformContainer location_globalNormal;
+	private UniformContainer location_windEffect;
+
+	private UniformContainer location_fogDencity;
+	private UniformContainer location_fogGradient;
+	private UniformContainer location_enableFog;
+	private UniformContainer location_skyColor;
 	
 	static
 	{
@@ -55,54 +61,65 @@ public class StaticShader extends ShaderProgram {
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
-		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		location_viewMatrix = super.getUniformLocation("viewMatrix");
-		location_lightPosition = super.getUniformLocation("lightPosition");
-		location_lightColor = super.getUniformLocation("lightColor");
+		location_transformationMatrix = new UniformContainer(this, "transformationMatrix");
+		location_projectionMatrix = new UniformContainer(this, "projectionMatrix");
+		location_viewMatrix = new UniformContainer(this, "viewMatrix");
+		location_lightPosition = new UniformContainer(this, "lightPosition");
+		location_lightColor = new UniformContainer(this, "lightColor");
+		location_shineDamper = new UniformContainer(this, "shineDamper");
+		location_reflectivity = new UniformContainer(this, "reflectivity");
+		location_ambienceIntencivity = new UniformContainer(this, "ambienceIntencivity");
+		location_tiling = new UniformContainer(this, "tiling");
+		location_alphaCutOff = new UniformContainer(this, "alphaCutOff");
+		location_globalNormal = new UniformContainer(this, "globalNormal");
+		location_windEffect = new UniformContainer(this, "windEffect");
 		
-		location_shineDamper = super.getUniformLocation("shineDamper");
-		location_reflectivity = super.getUniformLocation("reflectivity");
+		location_fogDencity = new UniformContainer(this, "fogDencity");
+		location_fogGradient = new UniformContainer(this, "fogGradient");
+		location_enableFog = new UniformContainer(this, "enableFog");
+		location_skyColor = new UniformContainer(this, "skyColor");
 		
-		location_ambienceIntencivity = super.getUniformLocation("ambienceIntencivity");
-		
-		location_tiling = super.getUniformLocation("tiling");
-		
-		location_alphaCutOff = super.getUniformLocation("alphaCutOff");
-		
-		location_windEffect = super.getUniformLocation("windEffect");
+		for (UniformContainer uc : UniformContainer.getForShader(this))
+		{
+			uc.Initialize();
+		}
 	}
 	
 	public void loadTransformationMatrix (Matrix4f matrix)
 	{
-		super.loadMatrix(location_transformationMatrix, matrix);
+		super.loadMatrix(location_transformationMatrix.getLocation(), matrix);
 	}
 	public void loadProjectionMatrix (Matrix4f projection)
 	{
-		super.loadMatrix(location_projectionMatrix, projection);
+		super.loadMatrix(location_projectionMatrix.getLocation(), projection);
 	}
 	public void loadViewMatrix (Camera camera)
 	{
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		super.loadMatrix(location_viewMatrix, viewMatrix);
+		super.loadMatrix(location_viewMatrix.getLocation(), viewMatrix);
 	}
 	public void loadLight (Light light)
 	{
-		super.loadFloat(location_ambienceIntencivity, AMBIENCE_INTENCIVITY);
-		super.loadVector(location_lightPosition, light.getPosition());
-		super.loadVector(location_lightColor, light.getColor());
+		super.loadFloat(location_ambienceIntencivity.getLocation(), AMBIENCE_INTENCIVITY);
+		super.loadVector(location_lightPosition.getLocation(), light.getPosition());
+		super.loadVector(location_lightColor.getLocation(), light.getColor());
+		
+		super.loadFloat(location_fogDencity.getLocation(), MasterRenderer.getFOG_DENCITY());
+		super.loadFloat(location_fogGradient.getLocation(), MasterRenderer.getFOG_GRADIENT());
+		super.loadBoolean(location_enableFog.getLocation(), MasterRenderer.isENABLE_FOG());
+		super.loadVector(location_skyColor.getLocation(), MasterRenderer.getSKY_COLOR());
 	}
 	public void loadTextureParams (ModelTexture texture)
 	{
-		super.loadBoolean(location_globalNormal, texture.isEnableGlobalNormal());
-		super.loadFloat(location_alphaCutOff, texture.getAlphaCutOff());
-		super.loadVector2(location_tiling, texture.getTiling());
-		super.loadFloat(location_shineDamper, texture.getShineDampen());
-		super.loadFloat(location_reflectivity, texture.getReflectivity());
+		super.loadBoolean(location_globalNormal.getLocation(), texture.isEnableGlobalNormal());
+		super.loadFloat(location_alphaCutOff.getLocation(), texture.getAlphaCutOff());
+		super.loadVector2(location_tiling.getLocation(), texture.getTiling());
+		super.loadFloat(location_shineDamper.getLocation(), texture.getShineDampen());
+		super.loadFloat(location_reflectivity.getLocation(), texture.getReflectivity());
 	}
 	public void loadWind (ModelContainer modelContainer) 
 	{
-		super.loadVector(location_windEffect, modelContainer.getWIND_DIRECTION(modelContainer.getTexture().getWindEffect()));
+		super.loadVector(location_windEffect.getLocation(), modelContainer.getWIND_DIRECTION(modelContainer.getTexture().getWindEffect()));
 	}
 }
 

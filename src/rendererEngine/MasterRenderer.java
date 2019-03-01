@@ -25,6 +25,11 @@ public class MasterRenderer {
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
 	
+	private static Vector3f SKY_COLOR = new Vector3f(0.7f, 0.7f, 1.0f);
+	private static float FOG_DENCITY = 0.007f;
+	private static float FOG_GRADIENT = 1.5f;
+	private static boolean ENABLE_FOG = false;
+	
 	private Matrix4f projectionMatrix;
 
 	private List<RendererContainer> renderers = new ArrayList<RendererContainer> ();
@@ -44,6 +49,38 @@ public class MasterRenderer {
 		renderers.add(new RendererContainer(new TerrainRenderer(terrainShader, projectionMatrix), terrainShader));
 	}
 	
+	public static boolean isENABLE_FOG() {
+		return ENABLE_FOG;
+	}
+
+	public static void setENABLE_FOG(boolean eNABLE_FOG) {
+		ENABLE_FOG = eNABLE_FOG;
+	}
+
+	public static float getFOG_DENCITY() {
+		return FOG_DENCITY;
+	}
+
+	public static void setFOG_DENCITY(float fOG_DENCITY) {
+		FOG_DENCITY = fOG_DENCITY;
+	}
+
+	public static float getFOG_GRADIENT() {
+		return FOG_GRADIENT;
+	}
+
+	public static void setFOG_GRADIENT(float fOG_GRADIENT) {
+		FOG_GRADIENT = fOG_GRADIENT;
+	}
+
+	public static Vector3f getSKY_COLOR() {
+		return SKY_COLOR;
+	}
+
+	public static void setSKY_COLOR(Vector3f sKY_COLOR) {
+		SKY_COLOR = sKY_COLOR;
+	}
+
 	public void render (Light sun, Camera camera)
 	{
 		prepare();
@@ -96,7 +133,7 @@ public class MasterRenderer {
 	public void prepare ()
 	{
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(0.7f, 0.7f, 1.0f, 1);
+		GL11.glClearColor(SKY_COLOR.x, SKY_COLOR.y, SKY_COLOR.z, 1);
 	}
 	
 	private void createProjectionMatrix ()

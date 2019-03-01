@@ -27,6 +27,10 @@ public class MainGameLoop {
 	
 	public static void main (String[] args)
 	{
+		
+		MasterRenderer.setENABLE_FOG(true);
+		MasterRenderer.setSKY_COLOR(new Vector3f(0.4f, 0.4f, 0.4f));
+		
 		DisplayManager.createDisplay();
 		
 		Loader loader = new Loader();
@@ -35,8 +39,13 @@ public class MainGameLoop {
 		RawModel model = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		ModelTexture texture = new ModelTexture (loader.loadTexture("SOLDIER"));
 		
+		texture.setEnableGlobalNormal(false);
+		
+		
+		
 		texture.setReflectivity(0f);
 		texture.setShineDampen(0f);
+		texture.setWindEffect(0.1f);
 		
 		TexturedModel staticModel = new TexturedModel (model, texture);
 		
@@ -50,13 +59,13 @@ public class MainGameLoop {
 		
 		
 		
-		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("fern"));
+		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("tree"));
 		
-		grassTexture.setEnableGlobalNormal(true);
+		grassTexture.setEnableGlobalNormal(false);
 		grassTexture.setEnableCulling(false);
 		grassTexture.setWindEffect(0.1f);
 		
-		ModelData grassData = OBJFileLoader.loadOBJ("fern");
+		ModelData grassData = OBJFileLoader.loadOBJ("tree");
 		RawModel grassRawModel = loader.loadToVAO(grassData.getVertices(), grassData.getTextureCoords(), grassData.getNormals(), grassData.getIndices());
 		TexturedModel grassModel = new TexturedModel (grassRawModel, grassTexture);
 		
@@ -68,7 +77,7 @@ public class MainGameLoop {
 			float y = 0;//random.nextFloat() * 100;
 			float z = random.nextFloat() * Terrain.getSIZE();
 			
-			Entity grass = new Entity(grassModel, new Vector3f(x,y,z), new Vector3f(), 1.0f);
+			Entity grass = new Entity(grassModel, new Vector3f(x,y,z), new Vector3f(), 10.0f);
 			modelContainers.add(grass);
 		}
 		
