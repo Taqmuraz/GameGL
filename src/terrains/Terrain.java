@@ -27,6 +27,8 @@ public class Terrain extends Transformable implements ModelContainer {
 		this.model = generateTerrain (loader);
 		
 		this.texturedModel = new TexturedModel (this.model, this.texture);
+		
+		this.initializeModelContainer();
 	}
 	
 	public TexturedModel getTexturedModel() {

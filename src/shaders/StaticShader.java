@@ -36,6 +36,8 @@ public class StaticShader extends ShaderProgram {
 	private UniformContainer location_enableFog;
 	private UniformContainer location_skyColor;
 	
+	private UniformContainer location_textureOffset;
+	
 	static
 	{
 		VERTEX_FILE = "src/shaders/vertexShader.txt";
@@ -79,6 +81,8 @@ public class StaticShader extends ShaderProgram {
 		location_enableFog = new UniformContainer(this, "enableFog");
 		location_skyColor = new UniformContainer(this, "skyColor");
 		
+		location_textureOffset = new UniformContainer(this, "textureOffset");
+		
 		for (UniformContainer uc : UniformContainer.getForShader(this))
 		{
 			uc.Initialize();
@@ -114,6 +118,7 @@ public class StaticShader extends ShaderProgram {
 		super.loadBoolean(location_globalNormal.getLocation(), texture.isEnableGlobalNormal());
 		super.loadFloat(location_alphaCutOff.getLocation(), texture.getAlphaCutOff());
 		super.loadVector2(location_tiling.getLocation(), texture.getTiling());
+		super.loadVector2(location_textureOffset.getLocation(), texture.getOffset());
 		super.loadFloat(location_shineDamper.getLocation(), texture.getShineDampen());
 		super.loadFloat(location_reflectivity.getLocation(), texture.getReflectivity());
 	}

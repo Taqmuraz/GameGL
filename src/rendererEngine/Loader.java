@@ -17,13 +17,20 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import models.RawModel;
+import toolbox.NamedContainer;
 
 public class Loader {
 	
 	private List<Integer> vaos = new ArrayList<Integer>();
 	private List<Integer> vbos = new ArrayList<Integer>();
-	private List<Integer> textures = new ArrayList<Integer>();
+	private List<NamedContainer<Integer>> textures = new ArrayList<NamedContainer<Integer>>();
 	
+	private static Loader loader;// = new Loader();
+	
+	public static Loader getLoader() {
+		return loader;
+	}
+
 	public RawModel loadToVAO (float[] positions, float[] textureCoords, float[] normals, int[] indices)
 	{
 		int vaoID = createVAO();
@@ -39,6 +46,11 @@ public class Loader {
 	
 	public int loadTexture (String fileName)
 	{
+		NamedContainer<Integer> exist = NamedContainer.<Integer>hasIt(textures, fileName);
+		if (exist != null)
+		{
+			return exist.getElement();
+		}
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png"));
@@ -48,7 +60,7 @@ public class Loader {
 			e.printStackTrace();
 		}
 		int textureID = texture.getTextureID();
-		textures.add(textureID);
+		textures.add(new NamedContainer<Integer>(fileName, textureID));
 		
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
@@ -68,9 +80,9 @@ public class Loader {
 		{
 			GL15.glDeleteBuffers(vbo);
 		}
-		for(int texture:textures)
+		for(NamedContainer<Integer> texture:textures)
 		{
-			GL11.glDeleteTextures(texture);
+			GL11.glDeleteTextures(texture.getElement());
 		}
 	}
 	
@@ -120,5 +132,9 @@ public class Loader {
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
+	}
+
+	public static void createLoader() {
+		loader = new Loader();
 	}
 }

@@ -1,6 +1,10 @@
 package entities;
 
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
+
+import toolbox.Maths;
 
 public abstract class Transformable {
 	private Vector3f position;
@@ -70,4 +74,41 @@ public abstract class Transformable {
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
+	public Matrix4f getMatrix ()
+	{
+		return Maths.createTransformationMatrix(position, rotation, scale);
+	}
+	public void translatePosition (Vector3f direction)
+	{
+		increasePosition(getGlobal(direction));
+	}
+	public Vector3f getGlobal (Vector3f local)
+	{
+		Vector4f v4 = new Vector4f (local.x, local.y, local.z, 0f);
+		Matrix4f mx = getMatrix();
+		mx.invert();
+		Matrix4f.transform(mx, v4, v4);
+		return new Vector3f(v4.x, v4.y, v4.z);
+	}
+	public Vector3f getLocal (Vector3f global)
+	{
+		Vector4f v4 = new Vector4f (global.x, global.y, global.z, 0f);
+		Matrix4f mx = getMatrix();
+		Matrix4f.transform(mx, v4, v4);
+		return new Vector3f(v4.x, v4.y, v4.z);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

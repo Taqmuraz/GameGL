@@ -1,5 +1,9 @@
 package models;
 
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
+import rendererEngine.Loader;
+
 public class RawModel {
 	private int vaoID;
 	private int vertexCount;

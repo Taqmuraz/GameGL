@@ -22,6 +22,8 @@ public class Entity extends Transformable implements ModelContainer {
 		this.model = model;
 		
 		initWind();
+		
+		this.initializeModelContainer();
 	}
 
 	public TexturedModel getTexturedModel() {

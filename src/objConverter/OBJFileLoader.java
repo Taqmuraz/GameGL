@@ -11,11 +11,22 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import toolbox.NamedContainer;
+
 public class OBJFileLoader {
 	
 	private static final String RES_LOC = "res/";
+	
+	private static List<NamedContainer<ModelData>> loadedModels = new ArrayList<NamedContainer<ModelData>>();
 	 
     public static ModelData loadOBJ(String objFileName) {
+    	
+    	NamedContainer<ModelData> exist = NamedContainer.<ModelData>hasIt(loadedModels, objFileName);
+		if (exist != null)
+		{
+			return exist.getElement();
+		}
+    	
         FileReader isr = null;
         File objFile = new File(RES_LOC + objFileName + ".obj");
         try {
@@ -83,6 +94,9 @@ public class OBJFileLoader {
         int[] indicesArray = convertIndicesListToArray(indices);
         ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray,
                 furthest);
+        
+        loadedModels.add(new NamedContainer<ModelData>(objFileName, data));
+        
         return data;
     }
  

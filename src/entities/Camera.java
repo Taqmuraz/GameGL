@@ -1,14 +1,29 @@
 package entities;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+
+import rendererEngine.DisplayManager;
 
 public class Camera extends Transformable {
 	
+	private static Camera MAIN_CAMERA;
+	
+	public static Camera getMAIN_CAMERA() {
+		return MAIN_CAMERA;
+	}
+
+	public static void setMAIN_CAMERA(Camera mAIN_CAMERA) {
+		MAIN_CAMERA = mAIN_CAMERA;
+	}
+
 	public Camera ()
 	{
 		super (new Vector3f(0f,0f,0f), new Vector3f(0f,0f,0f), 1f);
+		setMAIN_CAMERA(this);
 	}
 	
 	public void move ()
@@ -26,11 +41,11 @@ public class Camera extends Transformable {
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_W))
 		{
-			delta.z += move_Speed;
+			delta.z -= move_Speed;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_S))
 		{
-			delta.z -= move_Speed;
+			delta.z += move_Speed;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_A))
 		{
@@ -50,13 +65,12 @@ public class Camera extends Transformable {
 			delta.y += move_Speed;
 		}
 		
-		if (Mouse.isButtonDown(0))
-		{
-			deltaRot = new Vector3f (-Mouse.getDY() * rotate_speed, Mouse.getDX() * rotate_speed, 0f);
-		}
+		deltaRot = new Vector3f (-Mouse.getDY() * rotate_speed, Mouse.getDX() * rotate_speed, 0f);
+		Mouse.setCursorPosition(DisplayManager.WIDTH / 2, DisplayManager.HEIGHT / 2);
+		Mouse.poll();
 		
 		increaseRotation(deltaRot);
-		increasePosition(delta);
+		translatePosition(delta);
 	}
 
 	public float getPitch() {

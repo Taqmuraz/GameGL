@@ -2,6 +2,8 @@ package textures;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import rendererEngine.Loader;
+
 public class ModelTexture {
 	
 	private int textureID;
@@ -14,8 +16,18 @@ public class ModelTexture {
 	private float alphaCutOff = 0.5f;
 	private float windEffect = 0f;
 	
-
-	private Vector2f tiling;
+	
+	private Vector2f offset = new Vector2f(0f, 0f);
+	private Vector2f tiling = new Vector2f (1f, 1f);
+	
+	public ModelTexture (String name)
+	{
+		this(Loader.getLoader().loadTexture(name));
+	}
+	public ModelTexture (String name, Vector2f tiling)
+	{
+		this(Loader.getLoader().loadTexture(name), tiling);
+	}
 	
 	public ModelTexture (int id)
 	{
@@ -77,5 +89,12 @@ public class ModelTexture {
 
 	public void setWindEffect(float windEffect) {
 		this.windEffect = windEffect;
+	}
+
+	public Vector2f getOffset() {
+		return offset;
+	}
+	public void setOffset(Vector2f offset) {
+		this.offset = offset;
 	}
 }

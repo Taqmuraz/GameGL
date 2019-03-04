@@ -21,6 +21,12 @@ import models.TexturedModel;
 
 public class MasterRenderer {
 	
+	private static MasterRenderer masterRenderer;// = new MasterRenderer ();
+	
+	public static MasterRenderer getMasterRenderer() {
+		return masterRenderer;
+	}
+
 	private static final float FOV = 70f;
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
@@ -83,6 +89,11 @@ public class MasterRenderer {
 
 	public void render (Light sun, Camera camera)
 	{
+		for (ModelContainer mc : ModelContainer.modelContainers)
+		{
+			processModelContainer(mc);
+		}
+		
 		prepare();
 		for (RendererContainer renderer : renderers)
 		{
@@ -151,5 +162,9 @@ public class MasterRenderer {
 		projectionMatrix.m23 = -1f;
 		projectionMatrix.m32 = -((2f * NEAR_PLANE * FAR_PLANE) / frustum_length);
 		projectionMatrix.m33 = 0f;
+	}
+
+	public static void createMasterRenderer() {
+		masterRenderer = new MasterRenderer();
 	}
 }

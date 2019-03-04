@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
+import entities.InputControl;
 import entities.Light;
 import models.ModelContainer;
 import models.RawModel;
@@ -25,49 +26,21 @@ import textures.ModelTexture;
 
 public class MainGameLoop {
 	
-	public static void main (String[] args)
+	public static void createTestScene ()
 	{
-		
-		MasterRenderer.setENABLE_FOG(true);
-		MasterRenderer.setSKY_COLOR(new Vector3f(0.4f, 0.4f, 0.4f));
-		
-		DisplayManager.createDisplay();
-		
-		Loader loader = new Loader();
-		
-		ModelData modelData = OBJFileLoader.loadOBJ("SOLDIER");
-		RawModel model = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
-		ModelTexture texture = new ModelTexture (loader.loadTexture("SOLDIER"));
-		
-		texture.setEnableGlobalNormal(false);
-		
-		
-		
-		texture.setReflectivity(0f);
-		texture.setShineDampen(0f);
-		texture.setWindEffect(0.1f);
-		
-		TexturedModel staticModel = new TexturedModel (model, texture);
-		
-		texture.setShineDampen(10f);
-		texture.setReflectivity(0f);
+		TexturedModel staticModel = new TexturedModel ("SOLDIER", "SOLDIER");
 		
 		List<ModelContainer> modelContainers = new ArrayList<ModelContainer>();
 		
-		Terrain terrain = new Terrain (0,0, loader, new ModelTexture (loader.loadTexture("GRASS"), new Vector2f(50f, 50f)));
-		Entity.setWIND_ORIGIN(new Vector3f(1f, 0f, 0f));
+		Terrain terrain = new Terrain (0,0, Loader.getLoader(), new ModelTexture ("GRASS", new Vector2f(50f, 50f)));
 		
 		
+		TexturedModel grassModel = new TexturedModel ("tree", "tree");
+		ModelTexture grassTexture = grassModel.getTexture();
 		
-		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("tree"));
-		
-		grassTexture.setEnableGlobalNormal(false);
-		grassTexture.setEnableCulling(false);
+		grassTexture.setShineDampen(10f);
+		grassTexture.setReflectivity(1f);
 		grassTexture.setWindEffect(0.1f);
-		
-		ModelData grassData = OBJFileLoader.loadOBJ("tree");
-		RawModel grassRawModel = loader.loadToVAO(grassData.getVertices(), grassData.getTextureCoords(), grassData.getNormals(), grassData.getIndices());
-		TexturedModel grassModel = new TexturedModel (grassRawModel, grassTexture);
 		
 		Random random = new Random();
 		
@@ -86,33 +59,72 @@ public class MainGameLoop {
 		Entity entity = new Entity(staticModel, new Vector3f(400f, 0f, 400f), new Vector3f (), 1.0f);
 		
 		modelContainers.add(entity);
+	}
+	
+	public static void start ()
+	{
+		MasterRenderer.setENABLE_FOG(true);
+		MasterRenderer.setFOG_GRADIENT(1f);
+		MasterRenderer.setFOG_DENCITY(0.001f);
+		MasterRenderer.setSKY_COLOR(new Vector3f(0.4f, 0.4f, 0.4f));
+		
+		DisplayManager.createDisplay();
+		
+		Loader.createLoader();
+		MasterRenderer.createMasterRenderer();
 		
 		
 		Light light = new Light (new Vector3f(Terrain.getSIZE() / 2,1000f, Terrain.getSIZE() / 2), new Vector3f(1f, 1f, 1f));
 		
 		Camera camera = new Camera ();
 		camera.setPosition(new Vector3f(400f, 1f, 400f));
+	}
+	public static void loop ()
+	{
 		
-		MasterRenderer masterRenderer = new MasterRenderer ();
+		MasterRenderer masterRenderer = MasterRenderer.getMasterRenderer();
+		Camera camera = Camera.getMAIN_CAMERA();
 		
-		while (!Display.isCloseRequested())
+		InputControl.inputUpdate();
+		
+		//entity.increaseRotation(new Vector3f(0f, 0.5f, 0f));
+		//entity.increasePosition(new Vector3f (0f, 0f, -0.02f));
+		
+		camera.move();
+		
+		for (ModelContainer mc : ModelContainer.modelContainers)
 		{
-			//entity.increaseRotation(new Vector3f(0f, 0.5f, 0f));
-			//entity.increasePosition(new Vector3f (0f, 0f, -0.02f));
-			
-			camera.move();
-			
-			for (ModelContainer mc : modelContainers)
-			{
-				masterRenderer.processModelContainer(mc);
-			}
-			
-			masterRenderer.render(light, camera);
-			
-			DisplayManager.updateDisplay();
+			masterRenderer.processModelContainer(mc);
 		}
-		masterRenderer.cleanUp();
-		loader.cleanUp();
+		
+		masterRenderer.render(Light.getMAIN_LIGHT(), camera);
+		
+		DisplayManager.updateDisplay();
+	}
+	public static void end ()
+	{
+		MasterRenderer.getMasterRenderer().cleanUp();
+		Loader.getLoader().cleanUp();
 		DisplayManager.closeDisplay();
 	}
+	public static boolean haveToClose ()
+	{
+		return Display.isCloseRequested();
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

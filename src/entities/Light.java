@@ -3,6 +3,8 @@ package entities;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Light extends Transformable {
+	
+	private static Light MAIN_LIGHT;
 
 	private Vector3f color;
 	
@@ -17,5 +19,14 @@ public class Light extends Transformable {
 	public Light(Vector3f position, Vector3f color) {
 		super(position, new Vector3f(), 1f);
 		this.color = color;
+		setMAIN_LIGHT(this);
+	}
+
+	public static Light getMAIN_LIGHT() {
+		return MAIN_LIGHT;
+	}
+
+	private static void setMAIN_LIGHT(Light mAIN_LIGHT) {
+		MAIN_LIGHT = mAIN_LIGHT;
 	}
 }

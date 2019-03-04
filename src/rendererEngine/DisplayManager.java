@@ -1,6 +1,9 @@
 package rendererEngine;
 
+import java.awt.Cursor;
+
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -28,6 +31,21 @@ public class DisplayManager {
 		}
 		
 		GL11.glViewport(0, 0, WIDTH, HEIGHT);
+		
+		startMouse();
+	}
+	private static void startMouse ()
+	{
+		try {
+			Mouse.create();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
+		Mouse.setGrabbed(true);
+	}
+	private static void endMouse ()
+	{
+		Mouse.destroy();
 	}
 	public static void updateDisplay ()
 	{
@@ -36,6 +54,7 @@ public class DisplayManager {
 	}
 	public static void closeDisplay ()
 	{
+		endMouse();
 		Display.destroy();
 	}
 }

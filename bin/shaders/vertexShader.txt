@@ -15,6 +15,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition;
 uniform vec2 tiling;
+uniform vec2 textureOffset;
 uniform bool globalNormal;
 uniform vec3 windEffect;
 uniform float fogDencity;
@@ -28,6 +29,7 @@ void calculatePosition (void);
 void calculateLight (void);
 void calculateTextureCoords (void);
 void calculateFog (void);
+vec2 getCoords (vec2 origin);
 
 void main ()
 {
@@ -48,9 +50,13 @@ void calculateFog (void)
 	}
 	fogVisibility = visibility;
 }
+vec2 getCoords (vec2 origin)
+{
+	return vec2(origin.x * tiling.x, origin.y * tiling.y) + textureOffset;
+}
 void calculateTextureCoords (void)
 {
-	pass_textureCoords = vec2(textureCoords.x * tiling.x, textureCoords.y * tiling.y);
+	pass_textureCoords = getCoords(textureCoords);
 }
 void calculateLight (void)
 {
@@ -78,7 +84,7 @@ void calculatePosition (void)
 	
 	vec3 windAxis = (rawWorldPosition.xyz - rootPosition);
 	
-	float windForce = max(sqrt(windAxis.x * windAxis.x + windAxis.y * windAxis.y + windAxis.z * windAxis.z) - 1.0, 0.0);
+	float windForce = max(length(windAxis) - 1.0, 0.0);
 	
 	worldPosition = rawWorldPosition + vec4(windEffect * windForce, 1.0);
 	
