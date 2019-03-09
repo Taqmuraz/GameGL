@@ -12,6 +12,7 @@ import entities.Camera;
 import entities.Entity;
 import entities.InputControl;
 import entities.Light;
+import entities.Transformable;
 import models.ModelContainer;
 import models.RawModel;
 import models.TexturedModel;
@@ -26,7 +27,7 @@ import textures.ModelTexture;
 
 public class MainGameLoop {
 	
-	public static void createTestScene ()
+	public static Transformable createTestScene ()
 	{
 		TexturedModel staticModel = new TexturedModel ("SOLDIER", "SOLDIER");
 		
@@ -56,9 +57,11 @@ public class MainGameLoop {
 		
 		modelContainers.add(terrain);
 		
-		Entity entity = new Entity(staticModel, new Vector3f(400f, 0f, 400f), new Vector3f (), 1.0f);
+		Entity entity = new Entity(staticModel, new Vector3f(400f, 0f, 400f), new Vector3f (), 0.3f);
 		
 		modelContainers.add(entity);
+		
+		return entity;
 	}
 	
 	public static void start ()
@@ -89,8 +92,6 @@ public class MainGameLoop {
 		
 		//entity.increaseRotation(new Vector3f(0f, 0.5f, 0f));
 		//entity.increasePosition(new Vector3f (0f, 0f, -0.02f));
-		
-		camera.move();
 		
 		for (ModelContainer mc : ModelContainer.modelContainers)
 		{

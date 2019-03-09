@@ -12,6 +12,10 @@ public class Maths {
 	
 	private static final Random random = new Random();
 	
+	public static final Vector3f vForward = new Vector3f(0f, 0f, 1f);
+	public static final Vector3f vUp = new Vector3f(0f, 1f, 0f);
+	public static final Vector3f vRight = new Vector3f(1f, 0f, 0f);
+	
 	public static Matrix4f createTransformationMatrix (Vector3f translation, Vector3f rotation, float scale)
 	{
 		Matrix4f matrix = new Matrix4f();
@@ -41,4 +45,33 @@ public class Maths {
 		float resoult = min + d * random.nextFloat();
 		return resoult;
 	}
+	public static Vector3f vSum (Vector3f a, Vector3f b)
+	{
+		return new Vector3f (a.x + b.x, a.y + b.y, a.z + b.z);
+	}
+	public static Vector3f vDelta (Vector3f a, Vector3f b)
+	{
+		return new Vector3f (a.x - b.x, a.y - b.y, a.z - b.z);
+	}
+	public static Vector3f vMult (Vector3f a, float b)
+	{
+		return new Vector3f(a.x * b, a.y * b, a.z * b);
+	}
+	public static float clamp (float origin, float min, float max)
+	{
+		if (origin > max)
+		{
+			return max;
+		}
+		if (origin < min)
+		{
+			return min;
+		}
+		return origin;
+	}
 }
+
+
+
+
+
