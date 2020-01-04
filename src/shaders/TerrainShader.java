@@ -1,11 +1,19 @@
 package shaders;
 
 public class TerrainShader extends StaticShader {
-	
-	static
+
+	public TerrainShader ()
 	{
-		VERTEX_FILE = "src/shaders/vertexShader.txt";
-		FRAGMENT_FILE = "src/shaders/fragmentShader.txt";
+		super();
+	}
+	
+	protected String fragmentFile ()
+	{
+		return "src/shaders/gridShader.glsl";
+	}
+	protected String vertexFile ()
+	{
+		return "src/shaders/gridVertex.glsl";
 	}
 }
 

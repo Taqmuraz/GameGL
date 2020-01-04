@@ -1,8 +1,10 @@
 package toolbox;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -33,6 +35,7 @@ public class Maths {
         Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0), viewMatrix,
                 viewMatrix);
         Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
+        Matrix4f.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
         Vector3f cameraPos = camera.getPosition();
         Vector3f negativeCameraPos = new Vector3f(-cameraPos.x,-cameraPos.y,-cameraPos.z);
         Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
@@ -68,6 +71,47 @@ public class Maths {
 			return min;
 		}
 		return origin;
+	}
+	public static <TElement, TResoult extends Comparable<TResoult>> TElement getMinimum (Collection<TElement> collection, Predicate<TElement, TResoult> predicate)
+	{
+		TElement min = null;
+		for (TElement element : collection)
+		{
+			TResoult resoult = predicate.getResoult(element);
+			if (min == null || resoult.compareTo(predicate.getResoult(min)) < 0)
+			{
+				min = element;
+			}
+		}
+		return min;
+	}
+	public static <TElement extends Comparable<TElement>> TElement getMinimum (Collection<TElement> collection)
+	{
+		return getMinimum(collection, (TElement element) -> element);
+	}
+	public static <TElement> TElement getWhere (Collection<TElement> collection, Predicate<TElement, Boolean> predicate)
+	{
+		TElement element = null;
+		for (TElement cur : collection)
+		{
+			if (predicate.getResoult(cur))
+			{
+				element = cur;
+			}
+		}
+		return element;
+	}
+	public static <TElement> Collection<TElement> getWhereAll (Collection<TElement> collection, Predicate<TElement, Boolean> predicate)
+	{
+		List<TElement> list = new ArrayList<TElement>();
+		for (TElement cur : collection)
+		{
+			if (predicate.getResoult(cur))
+			{
+				list.add(cur);
+			}
+		}
+		return list;
 	}
 }
 

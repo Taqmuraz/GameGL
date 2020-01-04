@@ -1,11 +1,10 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
-import entities.Entity;
 import entities.Light;
+import gameEngine.GameTime;
 import models.ModelContainer;
 import rendererEngine.MasterRenderer;
 import textures.ModelTexture;
@@ -36,17 +35,23 @@ public class StaticShader extends ShaderProgram {
 	private UniformContainer location_enableFog;
 	private UniformContainer location_skyColor;
 	
-	private UniformContainer location_textureOffset;
+	private UniformContainer location_time;
+	private UniformContainer location_waterEffect;
 	
-	static
-	{
-		VERTEX_FILE = "src/shaders/vertexShader.txt";
-		FRAGMENT_FILE = "src/shaders/fragmentShader.txt";
-	}
+	private UniformContainer location_textureOffset;
 
 	
 	public StaticShader() {
-		super(VERTEX_FILE, FRAGMENT_FILE);
+		super();
+	}
+	
+	protected String vertexFile ()
+	{
+		return "src/shaders/vertexShader.glsl";
+	}
+	protected String fragmentFile ()
+	{
+		return "src/shaders/fragmentShader.glsl";
 	}
 	
 	public static void setAmbienceIntencivity (float value)
@@ -82,6 +87,9 @@ public class StaticShader extends ShaderProgram {
 		location_skyColor = new UniformContainer(this, "skyColor");
 		
 		location_textureOffset = new UniformContainer(this, "textureOffset");
+		
+		location_time = new UniformContainer(this, "time");
+		location_waterEffect = new UniformContainer (this, "waterEffect");
 		
 		for (UniformContainer uc : UniformContainer.getForShader(this))
 		{
@@ -121,6 +129,8 @@ public class StaticShader extends ShaderProgram {
 		super.loadVector2(location_textureOffset.getLocation(), texture.getOffset());
 		super.loadFloat(location_shineDamper.getLocation(), texture.getShineDampen());
 		super.loadFloat(location_reflectivity.getLocation(), texture.getReflectivity());
+		super.loadFloat(location_waterEffect.getLocation(), texture.getWaterEffect());
+		super.loadFloat(location_time.getLocation(), GameTime.getTime());
 	}
 	public void loadWind (ModelContainer modelContainer) 
 	{

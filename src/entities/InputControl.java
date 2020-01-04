@@ -24,6 +24,7 @@ public class InputControl {
 	private static ButtonStateControl[] mouse;
 	private static Vector3f MOVE_INPUT = new Vector3f();
 	private static Vector3f CAMERA_INPUT = new Vector3f();
+	private static float SCROLL_INPUT = 0f;
 	
 	
 	public static Vector3f getMOVE_INPUT() {
@@ -43,6 +44,7 @@ public class InputControl {
 		{
 			mouse[i].update(Mouse.isButtonDown(i));
 		}
+		SCROLL_INPUT = Mouse.getDWheel();
 	}
 	public static int getMouseButtonState (int button)
 	{
@@ -93,6 +95,9 @@ public class InputControl {
 		
 		MOVE_INPUT = delta;
 		CAMERA_INPUT = deltaRot;
+	}
+	public static float getSCROLL_INPUT() {
+		return SCROLL_INPUT;
 	}
 }
 

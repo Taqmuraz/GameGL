@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 import models.ModelContainer;
 import models.RawModel;
 import models.TexturedModel;
+import rendererEngine.EntityRenderer;
 import textures.ModelTexture;
 import toolbox.Maths;
 

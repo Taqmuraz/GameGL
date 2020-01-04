@@ -21,6 +21,8 @@ uniform vec3 windEffect;
 uniform float fogDencity;
 uniform float fogGradient;
 uniform bool enableFog;
+uniform float time;
+uniform float waterEffect;
 
 vec4 worldPosition;
 vec4 relativeToCamPosition;
@@ -72,11 +74,18 @@ void calculateLight (void)
 	
 	toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz;
 }
+vec3 calculateWaterPosition (vec3 position)
+{
+	vec3 waterRoot = position;//position - (transformationMatrix * position4);
+	vec3 effect = vec3(sin(waterRoot.y + time), sin(sin(waterRoot.x * 100.0) + sin(waterRoot.z * 100.0) + time), cos(waterRoot.y - time));
+	return worldPosition.xyz + effect * waterEffect;
+}
 void calculatePosition (void)
 {
+	vec4 position4 = vec4 (position, 1.0);
 	mat4 vt = viewMatrix * transformationMatrix;
 
-	vec4 rawWorldPosition = vt * vec4 (position, 1.0);
+	vec4 rawWorldPosition = vt * position4;
 	
 	relativeToCamPosition = rawWorldPosition;
 
@@ -88,13 +97,10 @@ void calculatePosition (void)
 	
 	worldPosition = rawWorldPosition + vec4(windEffect * windForce, 1.0);
 	
-	
 	//vec4 worldPosition = transformationMatrix * vec4 (textureCoords.x, 1.0 - textureCoords.y, 0.0, 1.0);
 	
 	gl_Position = projectionMatrix * worldPosition;
 }
-
-
 
 
 

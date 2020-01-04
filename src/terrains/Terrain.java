@@ -1,13 +1,20 @@
 package terrains;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.lwjgl.util.vector.Vector3f;
 
+import components.ColliderComponent;
 import entities.Transformable;
 import models.RawModel;
 import models.TexturedModel;
+import physicsEngine.TerrainCollider;
 import models.ModelContainer;
 import rendererEngine.Loader;
 import textures.ModelTexture;
+import toolbox.Maths;
 
 public class Terrain extends Transformable implements ModelContainer {
 	private static float SIZE = 800f;
@@ -16,6 +23,8 @@ public class Terrain extends Transformable implements ModelContainer {
 	private RawModel model;
 	private ModelTexture texture;
 	private TexturedModel texturedModel;
+	
+	private final List<Vector3f> points = new ArrayList<Vector3f>();
 	
 	public Terrain (int gridX, int gridZ, Loader loader, ModelTexture texture)
 	{
@@ -29,6 +38,8 @@ public class Terrain extends Transformable implements ModelContainer {
 		this.texturedModel = new TexturedModel (this.model, this.texture);
 		
 		this.initializeModelContainer();
+		
+		new ColliderComponent(new TerrainCollider(this));
 	}
 	
 	public TexturedModel getTexturedModel() {
@@ -92,11 +103,24 @@ public class Terrain extends Transformable implements ModelContainer {
 				indices[pointer++] = bottomRight;
 			}
 		}
+		
+		points.clear();
+		
+		for (int i = 0; i < vertices.length;)
+		{
+			points.add(new Vector3f(vertices[i++], vertices[i++], vertices[i++]));
+		}
+		
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
 	public void processWind ()
 	{
 		
+	}
+	public Vector3f getHeight (Vector3f point)
+	{
+		Vector3f min = Maths.getMinimum(points, (Vector3f p) -> Maths.vDelta(p, point).length());
+		return min;
 	}
 	public Vector3f getWIND_DIRECTION(float windForce)
 	{

@@ -14,7 +14,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
-import entities.Entity;
 import entities.Light;
 import models.ModelContainer;
 import models.TexturedModel;
@@ -28,7 +27,7 @@ public class MasterRenderer {
 	}
 
 	private static final float FOV = 70f;
-	private static final float NEAR_PLANE = 0.1f;
+	private static final float NEAR_PLANE = 0.01f;
 	private static final float FAR_PLANE = 1000f;
 	
 	private static Vector3f SKY_COLOR = new Vector3f(0.7f, 0.7f, 1.0f);
@@ -156,12 +155,17 @@ public class MasterRenderer {
 		
 		projectionMatrix = new Matrix4f();
 		projectionMatrix.setIdentity();
+		
+		
+		
 		projectionMatrix.m00 = x_scale;
 		projectionMatrix.m11 = y_scale;
 		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
 		projectionMatrix.m23 = -1f;
 		projectionMatrix.m32 = -((2f * NEAR_PLANE * FAR_PLANE) / frustum_length);
 		projectionMatrix.m33 = 0f;
+		
+		//projectionMatrix.rotate(180f, new Vector3f(0f, 1f, 0f));
 	}
 
 	public static void createMasterRenderer() {

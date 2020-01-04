@@ -15,6 +15,7 @@ public class ModelTexture {
 	private boolean enableGlobalNormal = false;
 	private float alphaCutOff = 0.5f;
 	private float windEffect = 0f;
+	private float waterEffect = 0f;
 	
 	
 	private Vector2f offset = new Vector2f(0f, 0f);
@@ -96,5 +97,11 @@ public class ModelTexture {
 	}
 	public void setOffset(Vector2f offset) {
 		this.offset = offset;
+	}
+	public float getWaterEffect() {
+		return waterEffect;
+	}
+	public void setWaterEffect(float waterEffect) {
+		this.waterEffect = waterEffect;
 	}
 }

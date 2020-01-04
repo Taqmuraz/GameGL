@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="lib/jars/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="lib/jars/lwjgl.jar"/>
 	<classpathentry kind="lib" path="lib/jars/slick-util.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PEngine"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

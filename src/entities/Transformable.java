@@ -16,6 +16,7 @@ public abstract class Transformable {
 		this.rotation = rotation;
 		this.scale = scale;
 	}
+	
 	public void increasePosition (float x, float y, float z)
 	{
 		this.position.x += x;
@@ -24,7 +25,10 @@ public abstract class Transformable {
 	}
 	public void increasePosition (Vector3f dPosition)
 	{
-		increasePosition(dPosition.x, dPosition.y, dPosition.z);
+		if (dPosition != null)
+		{
+			increasePosition(dPosition.x, dPosition.y, dPosition.z);
+		}
 	}
 	
 	public void increaseRotation (float x, float y, float z)
@@ -35,7 +39,10 @@ public abstract class Transformable {
 	}
 	public void increaseRotation (Vector3f dRotation)
 	{
-		increaseRotation(dRotation.x, dRotation.y, dRotation.z);
+		if (dRotation != null)
+		{
+			increaseRotation(dRotation.x, dRotation.y, dRotation.z);
+		}
 	}
 	
 	public float getRotX ()
@@ -74,9 +81,13 @@ public abstract class Transformable {
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
-	public Matrix4f getMatrix ()
+	private Matrix4f createMatrix ()
 	{
 		return Maths.createTransformationMatrix(position, rotation, scale);
+	}
+	public Matrix4f getMatrix ()
+	{
+		return createMatrix();
 	}
 	public void translatePosition (Vector3f direction)
 	{

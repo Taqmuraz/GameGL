@@ -3,18 +3,19 @@ package rendererEngine;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.html.parser.Entity;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
-import entities.Entity;
 import entities.Transformable;
 import models.RawModel;
 import models.ModelContainer;
-import models.TexturedModel;
 import shaders.StaticShader;
+import terrains.Terrain;
 import textures.ModelTexture;
 import toolbox.Maths;
 
@@ -39,7 +40,7 @@ public class EntityRenderer {
 			List<ModelContainer> batch = entities.get(model);
 			for (ModelContainer modelContainer : batch)
 			{
-				if (modelContainer instanceof Transformable)
+				if (modelContainer instanceof Transformable && haveToRender(modelContainer))
 				{
 					processWind(modelContainer);
 					prepareInstance ((Transformable)modelContainer);
@@ -89,12 +90,17 @@ public class EntityRenderer {
 	
 	protected void prepareInstance (Transformable transformable)
 	{
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(transformable.getPosition(), transformable.getRotation(), transformable.getScale());
+		Matrix4f transformationMatrix = transformable.getMatrix();
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
 	public StaticShader getShader() {
 		return shader;
+	}
+	
+	public boolean haveToRender (ModelContainer entity)
+	{
+		return !(entity instanceof Terrain);
 	}
 }
 

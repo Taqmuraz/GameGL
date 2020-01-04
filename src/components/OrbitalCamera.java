@@ -1,15 +1,16 @@
-package gameEngine;
+package components;
 
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.InputControl;
 import entities.Transformable;
+import gameEngine.GameTime;
 import toolbox.Maths;
 
 public class OrbitalCamera extends Component {
 	
-	private Transformable cameraTransform;
+	protected final Transformable cameraTransform;
 	private Transformable target;
 	private float distance = 3f;
 	private float rotSpeed = 3f;
@@ -24,6 +25,9 @@ public class OrbitalCamera extends Component {
 	protected void update ()
 	{
 		super.update();
+		
+		distance += InputControl.getSCROLL_INPUT() * GameTime.getDeltaTime();
+		
 		if (target != null)
 		{
 			Vector3f rot = cameraTransform.getRotation();
@@ -73,5 +77,9 @@ public class OrbitalCamera extends Component {
 
 	public void setMaxAngle(float maxAngle) {
 		this.maxAngle = maxAngle;
+	}
+
+	public Transformable getCameraTransformable() {
+		return cameraTransform;
 	}
 }
